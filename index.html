@@ -1,187 +1,289 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced Calculator</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Advanced Scientific Calculator</title>
 
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #121212;
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #0f0f0f;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    transition: 0.3s;
+}
 
-        .container {
-            display: flex;
-            gap: 20px;
-        }
+.calculator {
+    width: 360px;
+    background: #1b1b1b;
+    border-radius: 25px;
+    padding: 20px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
 
-        .calculator {
-            background: #1e1e1e;
-            padding: 20px;
-            border-radius: 20px;
-            width: 260px;
-        }
+#display {
+    width: 100%;
+    height: 80px;
+    border: none;
+    border-radius: 15px;
+    font-size: 32px;
+    text-align: right;
+    padding: 10px;
+    margin-bottom: 15px;
+    background: #000;
+    color: white;
+}
 
-        #display {
-            width: 100%;
-            height: 60px;
-            font-size: 24px;
-            text-align: right;
-            margin-bottom: 15px;
-            padding: 10px;
-            border: none;
-            border-radius: 10px;
-        }
+.buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
 
-        .buttons {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-        }
+button {
+    height: 60px;
+    border: none;
+    border-radius: 50%;
+    font-size: 20px;
+    cursor: pointer;
+    transition: 0.2s;
+}
 
-        button {
-            height: 55px;
-            margin: 5px;
-            font-size: 18px;
-            border: none;
-            border-radius: 12px;
-            background: #333;
-            color: white;
-            cursor: pointer;
-        }
+button:hover {
+    transform: scale(1.05);
+}
 
-        button:hover {
-            background: orange;
-        }
+.num {
+    background: #2b2b2b;
+    color: white;
+}
 
-        .zero {
-            grid-column: span 2;
-        }
+.op {
+    background: #ff9500;
+    color: white;
+}
 
-        .history {
-            background: #1e1e1e;
-            padding: 15px;
-            border-radius: 20px;
-            width: 200px;
-            max-height: 350px;
-            overflow-y: auto;
-        }
+.top {
+    background: #a5a5a5;
+}
 
-        .history h3 {
-            margin-top: 0;
-        }
+.history {
+    margin-top: 15px;
+    background: #111;
+    border-radius: 10px;
+    padding: 10px;
+    color: white;
+    max-height: 150px;
+    overflow-y: auto;
+}
 
-        .history ul {
-            list-style: none;
-            padding: 0;
-        }
+.history div {
+    border-bottom: 1px solid #333;
+    padding: 5px;
+    font-size: 14px;
+}
 
-        .history li {
-            padding: 5px;
-            border-bottom: 1px solid #444;
-            font-size: 14px;
-        }
-    </style>
+.toggle {
+    margin-bottom: 10px;
+    text-align: right;
+}
+
+.toggle button {
+    border-radius: 10px;
+    width: auto;
+    padding: 8px 12px;
+    background: #444;
+    color: white;
+}
+
+.light-mode {
+    background: #f2f2f2;
+}
+
+.light-mode .calculator {
+    background: white;
+}
+
+.light-mode #display {
+    background: #ddd;
+    color: black;
+}
+
+.light-mode .num {
+    background: #e0e0e0;
+    color: black;
+}
+
+.light-mode .history {
+    background: #eee;
+    color: black;
+}
+</style>
 </head>
 
 <body>
 
-<div class="container">
-    <div class="calculator">
-        <input type="text" id="display" disabled>
+<div class="calculator">
 
-        <div class="buttons">
-            <button onclick="clearDisplay()">C</button>
-            <button onclick="backspace()">⌫</button>
-            <button onclick="add('/')">÷</button>
-            <button onclick="add('*')">×</button>
-
-            <button onclick="add('7')">7</button>
-            <button onclick="add('8')">8</button>
-            <button onclick="add('9')">9</button>
-            <button onclick="add('-')">−</button>
-
-            <button onclick="add('4')">4</button>
-            <button onclick="add('5')">5</button>
-            <button onclick="add('6')">6</button>
-            <button onclick="add('+')">+</button>
-
-            <button onclick="add('1')">1</button>
-            <button onclick="add('2')">2</button>
-            <button onclick="add('3')">3</button>
-            <button onclick="calculate()">=</button>
-
-            <button onclick="add('0')" class="zero">0</button>
-            <button onclick="add('.')">.</button>
-        </div>
+    <div class="toggle">
+        <button onclick="toggleTheme()">Theme</button>
     </div>
 
-    <div class="history">
-        <h3>History</h3>
-        <ul id="historyList"></ul>
+    <input type="text" id="display" disabled>
+
+    <div class="buttons">
+        <button class="top" onclick="clearDisplay()">C</button>
+        <button class="top" onclick="backspace()">⌫</button>
+        <button class="top" onclick="add('%')">%</button>
+        <button class="op" onclick="add('/')">÷</button>
+
+        <button class="num" onclick="add('7')">7</button>
+        <button class="num" onclick="add('8')">8</button>
+        <button class="num" onclick="add('9')">9</button>
+        <button class="op" onclick="add('*')">×</button>
+
+        <button class="num" onclick="add('4')">4</button>
+        <button class="num" onclick="add('5')">5</button>
+        <button class="num" onclick="add('6')">6</button>
+        <button class="op" onclick="add('-')">−</button>
+
+        <button class="num" onclick="add('1')">1</button>
+        <button class="num" onclick="add('2')">2</button>
+        <button class="num" onclick="add('3')">3</button>
+        <button class="op" onclick="calculate()">=</button>
+
+        <button class="num" onclick="add('0')">0</button>
+        <button class="num" onclick="add('.')">.</button>
+        <button class="num" onclick="squareRoot()">√</button>
+        <button class="op" onclick="add('+')">+</button>
+
+        <button class="num" onclick="square()">x²</button>
+        <button class="num" onclick="cube()">x³</button>
+        <button class="num" onclick="sinValue()">sin</button>
+        <button class="num" onclick="cosValue()">cos</button>
     </div>
+
+    <div class="history" id="history"></div>
 </div>
 
 <script>
 let display = document.getElementById("display");
-let historyList = document.getElementById("historyList");
+let historyDiv = document.getElementById("history");
 
-// Add value
+loadHistory();
+
 function add(value) {
     let last = display.value.slice(-1);
 
-    if ("+-*/".includes(last) && "+-*/".includes(value)) {
+    if ("+-*/%".includes(last) && "+-*/%".includes(value)) {
         return;
     }
 
     display.value += value;
 }
 
-// Clear display
 function clearDisplay() {
     display.value = "";
 }
 
-// Backspace
 function backspace() {
     display.value = display.value.slice(0, -1);
 }
 
-// Calculate
 function calculate() {
     try {
-        let expression = display.value;
-        let result = Function('"use strict";return (' + expression + ')')();
+        let exp = display.value;
+        let result = Function('"use strict";return (' + exp + ')')();
 
-        addToHistory(expression + " = " + result);
+        addHistory(exp + " = " + result);
         display.value = result;
     } catch {
         display.value = "Error";
     }
 }
 
-// Add to history
-function addToHistory(entry) {
-    let li = document.createElement("li");
-    li.textContent = entry;
-    historyList.prepend(li);
+function squareRoot() {
+    try {
+        let value = parseFloat(display.value);
+        display.value = Math.sqrt(value);
+    } catch {
+        display.value = "Error";
+    }
+}
+
+function square() {
+    try {
+        let value = parseFloat(display.value);
+        display.value = value * value;
+    } catch {
+        display.value = "Error";
+    }
+}
+
+function cube() {
+    try {
+        let value = parseFloat(display.value);
+        display.value = value * value * value;
+    } catch {
+        display.value = "Error";
+    }
+}
+
+function sinValue() {
+    try {
+        let value = parseFloat(display.value);
+        display.value = Math.sin(value);
+    } catch {
+        display.value = "Error";
+    }
+}
+
+function cosValue() {
+    try {
+        let value = parseFloat(display.value);
+        display.value = Math.cos(value);
+    } catch {
+        display.value = "Error";
+    }
+}
+
+function addHistory(text) {
+    let div = document.createElement("div");
+    div.textContent = text;
+
+    historyDiv.prepend(div);
+
+    saveHistory();
+}
+
+function saveHistory() {
+    localStorage.setItem("calcHistory", historyDiv.innerHTML);
+}
+
+function loadHistory() {
+    historyDiv.innerHTML = localStorage.getItem("calcHistory") || "";
+}
+
+function toggleTheme() {
+    document.body.classList.toggle("light-mode");
 }
 
 // Keyboard support
-document.addEventListener("keydown", function(e) {
-    if (!isNaN(e.key) || "+-*/.".includes(e.key)) {
+window.addEventListener("keydown", function(e) {
+    if (!isNaN(e.key) || "+-*/.%".includes(e.key)) {
         add(e.key);
-    } else if (e.key === "Enter") {
+    }
+    else if (e.key === "Enter") {
         calculate();
-    } else if (e.key === "Backspace") {
+    }
+    else if (e.key === "Backspace") {
         backspace();
-    } else if (e.key === "Escape") {
+    }
+    else if (e.key === "Escape") {
         clearDisplay();
     }
 });
@@ -189,3 +291,5 @@ document.addEventListener("keydown", function(e) {
 
 </body>
 </html>
+
+
